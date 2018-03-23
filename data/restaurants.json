@@ -10,6 +10,7 @@
       "lng": -73.989667
     },
     "cuisine_type": "Asian",
+    "image_description": "Image that shows how the restaurant looks like.",
     "operating_hours": {
       "Monday": "5:30 pm - 11:00 pm",
       "Tuesday": "5:30 pm - 12:00 am",
@@ -49,6 +50,7 @@
       "lng": -73.966393
     },
     "cuisine_type": "Pizza",
+    "image_description": "Image of a pizza offered by the restaurant. It looks great!",
     "operating_hours": {
       "Monday": "5:30 pm - 11:00 pm",
       "Tuesday": "5:30 pm - 11:00 pm",
@@ -88,6 +90,7 @@
       "lng": -73.985414
     },
     "cuisine_type": "Asian",
+    "image_description": "Image of the restaurant, which looks really hipster.",
     "operating_hours": {
       "Monday": "11:30 am - 2:00 am",
       "Tuesday": "11:30 am - 2:00 am",
@@ -127,6 +130,7 @@
       "lng": -73.987501
     },
     "cuisine_type": "American",
+    "image_description": "Image of the restaurant, which is placed in a corner.",
     "operating_hours": {
       "Monday": "8:00 am - 10:30 pm",
       "Tuesday": "8:00 am - 10:30 pm",
@@ -166,6 +170,7 @@
       "lng": -73.933585
     },
     "cuisine_type": "Pizza",
+    "image_description": "Image of the restaurant, which has an industrial style.",
     "operating_hours": {
       "Monday": "11:00 am - 12:00 am",
       "Tuesday": "11:00 am - 12:00 am",
@@ -205,6 +210,7 @@
       "lng": -74.016162
     },
     "cuisine_type": "American",
+    "image_description": "Image of the restaurant, which is really patriotic.",
     "operating_hours": {
       "Monday": "Closed",
       "Tuesday": "12:00 pm - 10:00 pm",
@@ -244,6 +250,7 @@
       "lng": -73.983645
     },
     "cuisine_type": "American",
+    "image_description": "Black and white image that shows a frontal view of the restaurant.",
     "operating_hours": {
       "Monday": "11:30 am - 10:00 pm",
       "Tuesday": "Closed",
@@ -283,6 +290,7 @@
       "lng": -74.002082
     },
     "cuisine_type": "American",
+    "image_description": "Image of the frontal part of the restaurant, which has a blue signboard.",
     "operating_hours": {
       "Monday": "11:30 am - 3:00 pm, 5:30 pm - 11:00 pm",
       "Tuesday": "11:30 am - 3:00 pm, 5:30 pm - 11:00 pm",
@@ -322,6 +330,7 @@
       "lng": -73.950652
     },
     "cuisine_type": "Asian",
+    "image_description": "Image of the restaurant which shows a lot of people eating at the restaurant.",
     "operating_hours": {
       "Monday": "5:00 pm - 10:00 pm",
       "Tuesday": "5:00 pm - 10:00 pm",
@@ -361,6 +370,7 @@
       "lng": -73.954235
     },
     "cuisine_type": "Mexican",
+    "image_description": "Image of the restaurant, which is really modern and minimalist.",
     "operating_hours": {
       "Monday": "5:00 pm - 12:00 am",
       "Tuesday": "5:00 pm - 12:00 am",
