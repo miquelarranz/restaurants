@@ -8,10 +8,12 @@ addEventListener('fetch', event => {
     );
 });
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
+    caches.open(cacheName).then(cache => {
       return cache.addAll([
+        'index.html',
+        'restaurant.html',
         'sw.js',
         'js/dbhelper.js',
         'js/main.js',
