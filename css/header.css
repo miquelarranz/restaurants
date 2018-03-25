@@ -1,4 +1,4 @@
-#header > nav {
+#header > nav:first-child {
 	display: flex;
 	align-items: center;
   justify-content: center;
@@ -7,11 +7,11 @@
   background-color: #FFFFFF;
 }
 
-#header > nav h1 {
+#header > nav:first-child h1 {
 	margin-bottom: 0;
 }
 
-#header > nav h1 a {
+#header > nav:first-child h1 a {
   color: #3F51B5;
   font-size: 1em;
   font-weight: 400;
