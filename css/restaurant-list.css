@@ -30,8 +30,12 @@
   min-width: 100%;
 }
 
-#restaurants-list li h1 {
+#restaurants-list li h2:hover {
   color: #f18200;
+}
+
+#restaurants-list li h2 {
+  color: #3F51B5;
   font-family: Arial,sans-serif;
   font-size: 14pt;
   font-weight: 200;
@@ -44,19 +48,6 @@
 #restaurants-list p {
   margin: 0;
   font-size: 11pt;
-}
-
-#restaurants-list li a {
-  background-color: orange;
-  border-bottom: 3px solid #eee;
-  color: #fff;
-  display: inline-block;
-  font-size: 10pt;
-  margin: 15px 0 0;
-  padding: 8px 30px 10px;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
 }
 
 @media screen and (min-width: 500px) {
