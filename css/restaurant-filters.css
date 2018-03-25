@@ -3,9 +3,11 @@
   background-color: #3F51B5;
   align-items: center;
   padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.filter-options h2 {
+.filter-options label {
   color: #ffffff;
   font-size: 1rem;
   font-weight: normal;
@@ -19,7 +21,7 @@
   font-size: 11pt;
   height: 35px;
   letter-spacing: 0;
-  margin: 15px 0 10px 0;
+  margin: 15px 10px 10px 0;
   padding: 0 10px;
   width: 200px;
 }
