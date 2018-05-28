@@ -1,0 +1,19 @@
+#header > nav:first-child {
+	display: flex;
+	align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  background-color: #FFFFFF;
+}
+
+#header > nav:first-child h1 {
+	margin-bottom: 0;
+}
+
+#header > nav:first-child h1 a {
+  color: #3F51B5;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 3px;
+}

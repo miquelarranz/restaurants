@@ -1,11 +1,8 @@
 #map {
-	height: 300px;
-	width: 100%;
-	background-color: #ccc;
-}
+  height: 300px;
+  width: 100%;
+  background-color: #ccc; }
 
 @media screen and (min-width: 500px) {
-	#map {
-		height: 400px;
-	}
-}
+  #map {
+    height: 400px; } }

@@ -2,28 +2,33 @@
   padding: 10px 40px 16px;
   list-style: none;
   background-color: #3F51B5;
-  color: #FFFFFF;
+	color: #FFFFFF;
   font-size: 17px;
   margin: 0;
-  width: 100%; }
+  width: 100%;
+}
 
 /* Display list items side by side */
 #breadcrumb li {
-  color: #FFFFFF;
-  display: inline; }
+	color: #FFFFFF;
+  display: inline;
+}
 
 /* Add a slash symbol (/) before/behind each list item */
-#breadcrumb li + li:before {
+#breadcrumb li+li:before {
   padding: 8px;
   color: #FFFFFF;
-  content: "/\00a0"; }
+  content: "/\00a0";
+}
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
   color: #FFFFFF;
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
   color: #0275d8;
-  text-decoration: underline; }
+  text-decoration: underline;
+}

@@ -1,22 +1,19 @@
 .filter-options {
   max-width: 100%;
   background-color: #3F51B5;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   padding: 15px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+}
 
 .filter-options label {
   color: #ffffff;
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
-  margin: 0; }
+  margin: 0;
+}
 
 .filter-options select {
   background-color: white;
@@ -26,4 +23,5 @@
   letter-spacing: 0;
   margin: 15px 10px 10px 0;
   padding: 0 10px;
-  width: 200px; }
+  width: 200px;
+}
