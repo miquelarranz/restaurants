@@ -9,47 +9,41 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Database URL.
      * Change this to restaurants.json file location on your server.
      */
-    static get DATABASE_URL() {
-        const port = 8000; // Change this to your server port
-        return `http://localhost:${port}/data/restaurants.json`;
+    static get API_URL() {
+        return 'http://localhost:1337/restaurants';
     }
+
 
     /**
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', DBHelper.DATABASE_URL);
-        xhr.onload = () => {
-            if (xhr.status === 200) { // Got a success response from server!
-                const json = JSON.parse(xhr.responseText);
-                const restaurants = json.restaurants;
+        fetch(DBHelper.API_URL)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(restaurants) {
                 callback(null, restaurants);
-            } else { // Oops!. Got an error from server.
-                const error = (`Request failed. Returned status of ${xhr.status}`);
-                callback(error, null);
-            }
-        };
-        xhr.send();
+            })
+            .catch(function(error) {
+                callback(error);
+            });
     }
 
     /**
      * Fetch a restaurant by its ID.
      */
     static fetchRestaurantById(id, callback) {
-        // fetch all restaurants with proper error handling.
-        DBHelper.fetchRestaurants((error, restaurants) => {
-            if (error) {
-                callback(error, null);
-            } else {
-                const restaurant = restaurants.find(r => r.id == id);
-                if (restaurant) { // Got the restaurant
-                    callback(null, restaurant);
-                } else { // Restaurant does not exist in the database
-                    callback('Restaurant does not exist', null);
-                }
-            }
-        });
+        fetch(`${DBHelper.API_URL}/${id}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(restaurant) {
+                callback(null, restaurant);
+            })
+            .catch(function(error) {
+                callback(error);
+            });
     }
 
     /**
@@ -152,7 +146,7 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Restaurant image URL.
      */
     static imageUrlForRestaurant(restaurant) {
-        return (`/img/${restaurant.photograph}`);
+        return (`http://localhost:8000/img/${restaurant.photograph}.jpg`);
     }
 
     /**

@@ -4,26 +4,23 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
 const eslint = require('gulp-eslint');
+const watch = require('gulp-watch');
 
 var browserSync = require('browser-sync').create();
-
-browserSync.stream();
 
 gulp.task('styles', stylesTask);
 
 gulp.task('lint', lintTask);
 
-gulp.task('default', gulp.series('styles', 'lint'), defaultTask);
+gulp.task('browser-sync', browserSyncTask);
 
-function defaultTask(done) {
-    gulp.watch('scss/**/*.scss', gulp.series('styles'));
+gulp.task('watch', watchTask);
+
+gulp.task('default', gulp.series('styles', 'lint', 'browser-sync', 'watch'));
+
+function watchTask(done) {
     gulp.watch('js/**/*.js', gulp.series('lint'));
-
-    browserSync.init({
-        server: './'
-    });
-
-    done();
+    gulp.watch('scss/**/*.scss', gulp.series('styles'));
 }
 
 function stylesTask(done) {
@@ -33,7 +30,8 @@ function stylesTask(done) {
             browsers: ['last 2 versions'],
             cascade: false
         }))
-        .pipe(gulp.dest('./css'));
+        .pipe(gulp.dest('./css'))
+        .pipe(browserSync.stream());
 
     done();
 }
@@ -42,7 +40,33 @@ function lintTask(done) {
     gulp.src(['**/*.js', '!node_modules/**'])
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
+        .pipe(eslint.result(result => {
+    	    console.log(`ESLint result: ${result.filePath}`);
+    	    console.log(`# Messages: ${result.messages.length}`);
+    	    console.log(`# Warnings: ${result.warningCount}`);
+    	    console.log(`# Errors: ${result.errorCount}`);
+    	}));
+
+    done();
+}
+
+function browserSyncTask(done) {
+    console.log('1123321132')
+    browserSync.init(null, {
+        open: false,
+        server: {
+            baseDir: "./",
+            middleware: function(req, res, next) {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+                res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+                next();
+            }
+        },
+        watchOptions: {
+            debounceDelay: 1000
+        }
+    });
 
     done();
 }
