@@ -20,7 +20,8 @@
   "dependencies": {
     "browser-sync": "^2.24.4",
     "gulp-eslint": "^4.0.2",
-    "gulp-sass": "^4.0.1"
+    "gulp-sass": "^4.0.1",
+    "idb": "^2.1.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

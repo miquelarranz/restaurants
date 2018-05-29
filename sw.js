@@ -19,6 +19,7 @@ self.addEventListener('install', event => {
                 'js/main.js',
                 'js/restaurant_info.js',
                 'js/service-worker.js',
+                'js/indexdb-helper.js',
                 'css/header.css',
                 'css/map.css',
                 'css/navigation.css',

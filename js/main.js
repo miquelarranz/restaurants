@@ -1,20 +1,35 @@
 'use strict';
 
 const self = {
-    restaurants: undefined,
-    neighborhoods: undefined,
-    cuisines: undefined,
+    restaurants: [],
+    neighborhoods: [],
+    cuisines: [],
     map: undefined,
-    markers: []
+    markers: [],
 };
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', () => {
-    fetchNeighborhoods();
-    fetchCuisines();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+function initializeView() {
+    IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
+
+    IndexDBHelper.showCachedRestaurants().then((restaurants) => { // eslint-disable-line no-undef
+        fillRestaurantsHTML(restaurants);
+        updateRestaurants();
+    });
+
+    IndexDBHelper.showCachedCuisines().then((cuisines) => { // eslint-disable-line no-undef
+        fillCuisinesHTML(cuisines);
+        fetchCuisines();
+    });
+
+    IndexDBHelper.showCachedNeighborhoods().then((neighborhoods) => { // eslint-disable-line no-undef
+        fillNeighborhoodsHTML(neighborhoods);
+        fetchNeighborhoods();
+    });
+}
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -25,9 +40,16 @@ function fetchNeighborhoods() {
             console.error(error);
         } else {
             self.neighborhoods = neighborhoods;
+            IndexDBHelper.storeNeighborhoods(neighborhoods); // eslint-disable-line no-undef
+            resetNeighborhoods();
             fillNeighborhoodsHTML();
         }
     });
+}
+
+function resetNeighborhoods() {
+    const select = document.getElementById('neighborhoods-select');
+    select.innerHTML = '';
 }
 
 /**
@@ -43,6 +65,7 @@ function fillNeighborhoodsHTML(neighborhoods) {
         const option = document.createElement('option');
         option.innerHTML = neighborhood;
         option.value = neighborhood;
+
         select.append(option);
     });
 }
@@ -56,9 +79,16 @@ function fetchCuisines() {
             console.error(error);
         } else {
             self.cuisines = cuisines;
+            IndexDBHelper.storeCuisines(cuisines); // eslint-disable-line no-undef
+            resetCuisines();
             fillCuisinesHTML();
         }
     });
+}
+
+function resetCuisines() {
+    const select = document.getElementById('cuisines-select');
+    select.innerHTML = '';
 }
 
 /**
@@ -93,7 +123,8 @@ window.initMap = () => {
         center: loc,
         scrollwheel: false
     });
-    updateRestaurants();
+
+    initializeView();
 };
 
 /**
@@ -115,6 +146,8 @@ function updateRestaurants() {
         } else {
             resetRestaurants(restaurants);
             fillRestaurantsHTML();
+
+            IndexDBHelper.storeRestaurants(restaurants); // eslint-disable-line no-undef
         }
     });
 }
@@ -146,7 +179,7 @@ function fillRestaurantsHTML(restaurants) {
     restaurants.forEach(restaurant => {
         ul.append(createRestaurantHTML(restaurant));
     });
-    addMarkersToMap();
+    addMarkersToMap(restaurants);
 }
 
 /**
