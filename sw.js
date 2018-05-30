@@ -1,6 +1,19 @@
-const cacheName = 'restaurants-v1';
+const staticCacheName = 'restaurants-v1';
+const contentImgsCache = 'restaurants-content-imgs';
+
+var allCaches = [
+    staticCacheName,
+    contentImgsCache
+];
 
 addEventListener('fetch', event => {
+    var requestUrl = new URL(event.request.url);
+
+    if (requestUrl.pathname.startsWith('/img/')) {
+        event.respondWith(serveImage(event.request));
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then(function(response) {
             return response || fetch(event.request);
@@ -8,9 +21,39 @@ addEventListener('fetch', event => {
     );
 });
 
+function serveImage(request) {
+    var storageUrl = request.url;
+
+    return caches.open(contentImgsCache).then(function(cache) {
+        return cache.match(storageUrl).then(function(response) {
+            if (response) return response;
+
+            return fetch(request).then((networkResponse) => {
+                cache.put(storageUrl, networkResponse.clone());
+                return networkResponse;
+            });
+        });
+    });
+}
+
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.filter(function(cacheName) {
+                    return cacheName.startsWith('restaurants-') &&
+                        !allCaches.includes(cacheName);
+                }).map(function(cacheName) {
+                    return caches.delete(cacheName);
+                })
+            );
+        })
+    );
+});
+
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(cacheName).then(cache => {
+        caches.open(staticCacheName).then(cache => {
             return cache.addAll([
                 'index.html',
                 'restaurant.html',
@@ -28,16 +71,7 @@ self.addEventListener('install', event => {
                 'css/restaurant-list.css',
                 'css/styles.css',
                 'img/1.jpg',
-                'img/2.jpg',
-                'img/3.jpg',
-                'img/4.jpg',
-                'img/5.jpg',
-                'img/6.jpg',
-                'img/7.jpg',
-                'img/8.jpg',
-                'img/9.jpg',
-                'img/10.jpg',
-                'data/restaurants.json'
+
             ]);
         })
     );
