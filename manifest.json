@@ -1,0 +1,9 @@
+{
+  "short_name": "restaurant-reviews-pwa",
+  "name": "Restaurant Reviews PWA",
+  "start_url": "/?source=pwa",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3F51B5"
+}

@@ -10,28 +10,43 @@ var browserSync = require('browser-sync').create();
 
 gulp.task('styles', stylesTask);
 
+gulp.task('copy-html', copyHTMLTask);
+
+gulp.task('copy-images', copyImagesTask);
+
 gulp.task('lint', lintTask);
 
 gulp.task('browser-sync', browserSyncTask);
 
 gulp.task('watch', watchTask);
 
-gulp.task('default', gulp.series('styles', 'lint', 'browser-sync', 'watch'));
-
-function watchTask(done) {
-    gulp.watch('js/**/*.js', gulp.series('lint'));
-    gulp.watch('scss/**/*.scss', gulp.series('styles'));
-}
+gulp.task('default', gulp.series('copy-html', 'copy-images', 'styles', 'lint', 'browser-sync', 'watch'));
 
 function stylesTask(done) {
-    gulp.src('scss/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
+    gulp.src('scss/**/index.scss')
+        .pipe(sass(
+            {outputStyle: 'compressed'}
+        ).on('error', sass.logError))
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
             cascade: false
         }))
-        .pipe(gulp.dest('./css'))
+        .pipe(gulp.dest('dist/css'))
         .pipe(browserSync.stream());
+
+    done();
+}
+
+function copyHTMLTask(done) {
+    gulp.src('./*.html')
+    .pipe(gulp.dest('./dist'))
+
+    done();
+}
+
+function copyImagesTask(done) {
+    gulp.src('./img/*.jpg')
+    .pipe(gulp.dest('./dist/img'))
 
     done();
 }
@@ -51,11 +66,10 @@ function lintTask(done) {
 }
 
 function browserSyncTask(done) {
-    console.log('1123321132')
-    browserSync.init(null, {
+    browserSync.init({
         open: false,
         server: {
-            baseDir: "./",
+            baseDir: "./dist",
             middleware: function(req, res, next) {
                 res.setHeader('Access-Control-Allow-Origin', '*');
                 res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -69,4 +83,11 @@ function browserSyncTask(done) {
     });
 
     done();
+}
+
+function watchTask(done) {
+    gulp.watch('js/**/*.js', gulp.series('lint'));
+    gulp.watch('scss/**/*.scss', gulp.series('styles'));
+    gulp.watch('./*.html', gulp.series('copy-html'));
+    gulp.watch('./dist/*.html').on('change', browserSync.reload);
 }
