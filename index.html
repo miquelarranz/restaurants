@@ -8,8 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#3F51B5"/>
 
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/index.css">
+  <!-- <link defer rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" /> -->
+  <link defer rel="stylesheet" href="css/index.css">
 
   <title>Restaurant Reviews</title>
 </head>
@@ -22,9 +22,6 @@
   </header>
 
   <main id="maincontent">
-    <section id="map-container">
-      <div id="map" role="application"></div>
-    </section>
     <section>
       <div class="filter-options">
         <span>
@@ -44,14 +41,13 @@
       </div>
       <ul id="restaurants-list"></ul>
     </section>
+    <section id="map-container">
+      <div id="map" role="application"></div>
+    </section>
   </main>
 
-  <script src="node_modules/idb/lib/idb.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/indexdb-helper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/service-worker.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&libraries=places&callback=initMap"></script>
+  <script defer type="application/javascript" charset="utf-8" src="http://localhost:8000/dist/js/all.js"></script>
+  <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&libraries=places&callback=initMainMap"></script> -->
 
 
   <footer id="footer">

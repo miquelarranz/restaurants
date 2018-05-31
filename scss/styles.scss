@@ -58,3 +58,21 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   text-align: center;
   text-transform: uppercase;
 }
+
+img {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+img[data-src] {
+  opacity: 0;
+}
+
+#map {
+  opacity: 0;
+}
+
+#map[class] {
+  opacity: 1;
+  transition: opacity 0.3s;
+}

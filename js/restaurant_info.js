@@ -1,6 +1,6 @@
 'use strict';
 
-const self = {
+const restaurantInfo = {
     restaurant: undefined,
     map: undefined
 };
@@ -13,13 +13,13 @@ window.initMap = () => {
         if (error) { // Got an error!
             console.error(error);
         } else {
-            self.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
+            restaurantInfo.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
                 zoom: 16,
                 center: restaurant.latlng,
                 scrollwheel: false
             });
             fillBreadcrumb();
-            DBHelper.mapMarkerForRestaurant(self.restaurant, self.map); // eslint-disable-line no-undef
+            DBHelper.mapMarkerForRestaurant(restaurantInfo.restaurant, restaurantInfo.map); // eslint-disable-line no-undef
         }
     });
 };
@@ -28,8 +28,8 @@ window.initMap = () => {
  * Get current restaurant from page URL.
  */
 function fetchRestaurantFromURL(callback) {
-    if (self.restaurant) { // restaurant already fetched!
-        callback(null, self.restaurant);
+    if (restaurantInfo.restaurant) { // restaurant already fetched!
+        callback(null, restaurantInfo.restaurant);
         return;
     }
     const id = getParameterByName('id');
@@ -38,7 +38,7 @@ function fetchRestaurantFromURL(callback) {
         callback(error, null);
     } else {
         DBHelper.fetchRestaurantById(id, (error, restaurant) => { // eslint-disable-line no-undef
-            self.restaurant = restaurant;
+            restaurantInfo.restaurant = restaurant;
             if (!restaurant) {
                 return;
             }
@@ -53,7 +53,7 @@ function fetchRestaurantFromURL(callback) {
  */
 function fillRestaurantHTML(restaurant) {
     if (!restaurant) {
-        restaurant = self.restaurant;
+        restaurant = restaurantInfo.restaurant;
     }
 
     const name = document.getElementById('restaurant-name');
@@ -64,6 +64,7 @@ function fillRestaurantHTML(restaurant) {
 
     const image = document.getElementById('restaurant-img');
     image.className = 'restaurant-img';
+    image.defer = true;
     image.alt = restaurant.image_description;
     image.src = DBHelper.imageUrlForRestaurant(restaurant); // eslint-disable-line no-undef
 
@@ -83,7 +84,7 @@ function fillRestaurantHTML(restaurant) {
  */
 function fillRestaurantHoursHTML(operatingHours) {
     if (!operatingHours) {
-        operatingHours = self.restaurant.operating_hours;
+        operatingHours = restaurantInfo.restaurant.operating_hours;
     }
 
     const hours = document.getElementById('restaurant-hours');
@@ -107,7 +108,7 @@ function fillRestaurantHoursHTML(operatingHours) {
  */
 function fillReviewsHTML(reviews) {
     if (!reviews) {
-        reviews = self.restaurant.reviews;
+        reviews = restaurantInfo.restaurant.reviews;
     }
 
     const container = document.getElementById('reviews-container');
@@ -157,7 +158,7 @@ function createReviewHTML(review) {
  */
 function fillBreadcrumb(restaurant) {
     if (!restaurant) {
-        restaurant = self.restaurant;
+        restaurant = restaurantInfo.restaurant;
     }
 
     const breadcrumb = document.getElementById('breadcrumb');

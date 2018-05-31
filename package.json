@@ -4,7 +4,7 @@
   "description": "This repository contains all the files related to a Restaurant Reviews Progressive Web App (PWA) made during the Mobile Web Specialist Nanodegree from Udacity. It contains two main views, one that includes a list of restaurants and another one that includes the restaurant detail. It is based on the Mobile-First approach (it's completely responsive) and it works offline thanks to the service workers and the browser cache.",
   "main": "js/main.js",
   "scripts": {
-    "start": "python -m SimpleHTTPServer 8000",
+    "start": "python GzipSimpleHTTPServer.py 8000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,9 +18,15 @@
   },
   "homepage": "https://github.com/miquelarranz/restaurants#readme",
   "dependencies": {
-    "browser-sync": "2.23.7",
+    "echo-js": "^1.7.3",
+    "gulp-concat": "^2.6.1",
     "gulp-eslint": "^4.0.2",
+    "gulp-gzip": "^1.4.2",
+    "gulp-imagemin": "^4.1.0",
     "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-uglifycss": "^1.0.9",
     "idb": "^2.1.2"
   },
   "devDependencies": {
@@ -28,6 +34,8 @@
     "eslint": "^3.19.0",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^5.0.0",
-    "gulp-watch": "^5.0.0"
+    "gulp-rm": "^1.0.5",
+    "gulp-watch": "^5.0.0",
+    "merge-stream": "^1.0.1"
   }
 }

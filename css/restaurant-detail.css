@@ -46,7 +46,8 @@
 
 #restaurant-img {
   width: 100%;
-  max-width: 500px; }
+  max-width: 300px;
+  height: auto; }
 
 #restaurant-address {
   font-size: 1.8em;

@@ -146,7 +146,14 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Restaurant image URL.
      */
     static imageUrlForRestaurant(restaurant) {
-        return (`http://localhost:8000/img/${restaurant.photograph}.jpg`);
+        return (`../img/${restaurant.photograph}.webp`);
+    }
+
+    /**
+     * Restaurant image URL.
+     */
+    static smallImageUrlForRestaurant(restaurant) {
+        return (`./img/${restaurant.photograph}-100w.webp 100w, ./img/${restaurant.photograph}.webp 300w`);
     }
 
     /**

@@ -24,10 +24,9 @@
 #restaurants-list .restaurant-img {
   background-color: #ccc;
   display: block;
-  margin: 0;
-  max-width: 100%;
+  margin: 0 auto;
+  width: 100px;
   min-height: auto;
-  min-width: 100%;
 }
 
 #restaurants-list li h2:hover {
@@ -60,4 +59,12 @@
 	#restaurants-list li {
 		width: calc((100%)/3);
 	}
+}
+
+@media screen and (min-width: 500px) {
+    #restaurants-list .restaurant-img {
+    	width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
 }

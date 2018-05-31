@@ -1,12 +1,25 @@
 'use strict';
 
-const self = {
+const main = {
     restaurants: [],
     neighborhoods: [],
     cuisines: [],
     map: undefined,
     markers: [],
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeView();
+
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.defer = true;
+    script.src= 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&libraries=places&callback=initMainMap';
+    // document.body.appendChild(script);
+
+    const map = document.getElementById('map');
+    map.classList.add('loaded');
+});
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -29,6 +42,15 @@ function initializeView() {
         fillNeighborhoodsHTML(neighborhoods);
         fetchNeighborhoods();
     });
+
+    echo.init({
+        offset: 100,
+        throttle: 250,
+        unload: false,
+        callback: function (element, op) {
+            console.log(element, 'has been', op + 'ed')
+        }
+    });
 }
 
 /**
@@ -39,7 +61,7 @@ function fetchNeighborhoods() {
         if (error) { // Got an error
             console.error(error);
         } else {
-            self.neighborhoods = neighborhoods;
+            main.neighborhoods = neighborhoods;
             IndexDBHelper.storeNeighborhoods(neighborhoods); // eslint-disable-line no-undef
             resetNeighborhoods();
             fillNeighborhoodsHTML();
@@ -57,7 +79,7 @@ function resetNeighborhoods() {
  */
 function fillNeighborhoodsHTML(neighborhoods) {
     if (!neighborhoods) {
-        neighborhoods = self.neighborhoods;
+        neighborhoods = main.neighborhoods;
     }
 
     const select = document.getElementById('neighborhoods-select');
@@ -78,7 +100,7 @@ function fetchCuisines() {
         if (error) { // Got an error!
             console.error(error);
         } else {
-            self.cuisines = cuisines;
+            main.cuisines = cuisines;
             IndexDBHelper.storeCuisines(cuisines); // eslint-disable-line no-undef
             resetCuisines();
             fillCuisinesHTML();
@@ -96,7 +118,7 @@ function resetCuisines() {
  */
 function fillCuisinesHTML(cuisines) {
     if (!cuisines) {
-        cuisines = self.cuisines;
+        cuisines = main.cuisines;
     }
 
     const select = document.getElementById('cuisines-select');
@@ -112,19 +134,19 @@ function fillCuisinesHTML(cuisines) {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+window.initMainMap = () => {
     let loc = {
         lat: 40.722216,
         lng: -73.987501
     };
 
-    self.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
+    main.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
         zoom: 12,
         center: loc,
         scrollwheel: false
     });
 
-    initializeView();
+    addMarkersToMap(self.restaurants);
 };
 
 /**
@@ -157,14 +179,14 @@ function updateRestaurants() {
  */
 function resetRestaurants(restaurants) {
     // Remove all restaurants
-    self.restaurants = [];
+    main.restaurants = [];
     const ul = document.getElementById('restaurants-list');
     ul.innerHTML = '';
 
     // Remove all map markers
-    self.markers.forEach(m => m.setMap(null));
-    self.markers = [];
-    self.restaurants = restaurants;
+    main.markers.forEach(m => m.setMap(null));
+    main.markers = [];
+    main.restaurants = restaurants;
 }
 
 /**
@@ -172,14 +194,26 @@ function resetRestaurants(restaurants) {
  */
 function fillRestaurantsHTML(restaurants) {
     if (!restaurants) {
-        restaurants = self.restaurants;
+        restaurants = main.restaurants;
     }
 
     const ul = document.getElementById('restaurants-list');
     restaurants.forEach(restaurant => {
         ul.append(createRestaurantHTML(restaurant));
     });
-    addMarkersToMap(restaurants);
+
+    // restaurants.forEach.call(document.querySelectorAll('img[data-src]'), function(img) {
+    //     img.setAttribute('src', img.getAttribute('data-src'));
+    //     img.setAttribute('srcset', img.getAttribute('data-srcset'));
+    //     img.setAttribute('sizes', img.getAttribute('data-sizes'));
+    //     img.onload = function() {
+    //         img.removeAttribute('data-src');
+    //         img.removeAttribute('data-sizes');
+    //         img.removeAttribute('data-srcset');
+    //     };
+    // });
+
+    // addMarkersToMap(restaurants);
 }
 
 /**
@@ -191,8 +225,12 @@ function createRestaurantHTML(restaurant) {
 
     const image = document.createElement('img');
     image.className = 'restaurant-img';
-    image.src = DBHelper.imageUrlForRestaurant(restaurant); // eslint-disable-line no-undef
-    image.alt = restaurant.image_description;
+    image.setAttribute('defer','');
+    image.setAttribute('src', './img/grey.webp'); // eslint-disable-line no-undef
+    image.setAttribute('data-echo', DBHelper.imageUrlForRestaurant(restaurant)); // eslint-disable-line no-undef
+    // image.setAttribute('sizes', '(max-width: 200px) 50vw, (min-width: 401px) 50vw, (min-width: 401px) 100vw'); // eslint-disable-line no-undef
+    // image.setAttribute('srcset', DBHelper.smallImageUrlForRestaurant(restaurant)); // eslint-disable-line no-undef
+    image.alt = restaurant.name;
     restaurantContainer.append(image);
 
     const nameLink = document.createElement('a');
@@ -225,16 +263,16 @@ function createRestaurantHTML(restaurant) {
  */
 function addMarkersToMap(restaurants) {
     if (!restaurants) {
-        restaurants = self.restaurants;
+        restaurants = main.restaurants;
     }
 
     restaurants.forEach(restaurant => {
         // Add marker to the map
-        const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map); // eslint-disable-line no-undef
+        const marker = DBHelper.mapMarkerForRestaurant(restaurant, main.map); // eslint-disable-line no-undef
         google.maps.event.addListener(marker, 'click', () => { // eslint-disable-line no-undef
             window.location.href = marker.url;
         });
 
-        self.markers.push(marker);
+        main.markers.push(marker);
     });
 }
