@@ -8,7 +8,7 @@ var allCaches = [
 
 addEventListener('fetch', event => {
     var requestUrl = new URL(event.request.url);
-    console.log(requestUrl.pathname)
+
     if (requestUrl.pathname.startsWith('/dist/img/') && requestUrl.pathname.endsWith('.webp')) {
         event.respondWith(serveImage(event.request));
         return;
@@ -55,26 +55,31 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(staticCacheName).then(cache => {
             return cache.addAll([
-                'index.html',
-                'restaurant.html',
-                'sw.js',
-                'js/dbhelper.js',
-                'js/main.js',
-                'js/restaurant_info.js',
-                'js/service-worker.js',
-                'js/indexdb-helper.js',
-                'css/header.css',
-                'css/map.css',
-                'css/navigation.css',
-                'css/restaurant-detail.css',
-                'css/restaurant-filters.css',
-                'css/restaurant-list.css',
-                'css/styles.css',
+                // 'index.html',
+                // 'restaurant.html',
+                // 'sw.js',
+                // 'js/dbhelper.js',
+                // 'js/main.js',
+                // 'js/restaurant_info.js',
+                // 'js/service-worker.js',
+                // 'js/indexdb-helper.js',
+                // 'css/header.css',
+                // 'css/map.css',
+                // 'css/navigation.css',
+                // 'css/restaurant-detail.css',
+                // 'css/restaurant-filters.css',
+                // 'css/restaurant-list.css',
+                // 'css/styles.css',
 
-                'dist/css/index.css',
-                'dist/js/all.js',
-                'dist/index.html',
-                'dist/restaurant.html'
+                './css/index.css',
+                './css/restaurant.css',
+                './css/header.css',
+                './css/styles.css',
+                './js/all.js',
+                './js/all-detail.js',
+                './index.html',
+                './restaurant.html',
+                './manifest.json'
             ]);
         })
     );

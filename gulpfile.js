@@ -11,11 +11,13 @@ const uglify = require('gulp-uglify-es').default;
 const merge = require('merge-stream');
 const uglifycss = require('gulp-uglifycss');
 const imagemin = require('gulp-imagemin');
-const gzip = require('gulp-gzip');
+const inlineCss = require('gulp-inline-css');
 
 // var browserSync = require('browser-sync').create();
 
 gulp.task('styles', stylesTask);
+
+gulp.task('styles-inline', stylesInlineTask);
 
 gulp.task('copy-html', copyHTMLTask);
 
@@ -29,9 +31,9 @@ gulp.task('scripts', scriptsTask);
 
 gulp.task('scripts-dist', scriptsDistTask);
 
-gulp.task('clean-sw', cleanSWScriptTask);
+gulp.task('scripts-detail-dist', scriptsDetailDistTask);
 
-gulp.task('clean-node-modules', cleanNodeModulesScriptsTask);
+gulp.task('clean-scripts', cleanScriptsTask);
 
 gulp.task('lint', lintTask);
 
@@ -40,32 +42,57 @@ gulp.task('lint', lintTask);
 gulp.task('watch', watchTask);
 
 gulp.task('default', gulp.series(
-    'copy-html',
     'copy-images',
     'styles',
+    'copy-html',
     'lint',
     'move-scripts',
     'scripts',
-    'clean-sw',
-    'clean-node-modules',
+    'clean-scripts',
     // 'browser-sync',
     'watch'
 ));
 
 gulp.task('dist', gulp.series(
-    'copy-html',
     'copy-manifest',
     'copy-images',
+    'styles-inline',
+    'copy-html',
     'styles',
     'move-scripts',
     'scripts-dist',
-    // 'clean-sw',
-    // 'clean-node-modules',
+    'scripts-detail-dist',
+    // 'clean-scripts',
     // 'lint'
 ));
 
 function stylesTask(done) {
-    gulp.src('scss/**/index.scss')
+    gulp.src([
+        'scss/**/index.scss',
+        'scss/**/restaurant.scss'
+    ])
+        .pipe(sass(
+            {outputStyle: 'compressed'}
+        ).on('error', sass.logError))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe(uglifycss({
+            "maxLineLen ": 80,
+            "uglyComments": true
+        }))
+        .pipe(gulp.dest('dist/css'))
+        // .pipe(browserSync.stream());
+
+    done();
+}
+
+function stylesInlineTask(done) {
+    gulp.src([
+        'scss/**/header.scss',
+        'scss/**/styles.scss'
+    ])
         .pipe(sass(
             {outputStyle: 'compressed'}
         ).on('error', sass.logError))
@@ -85,20 +112,27 @@ function stylesTask(done) {
 
 function copyHTMLTask(done) {
     gulp.src('./*.html')
+        .pipe(inlineCss())
         .pipe(gulp.dest('./dist'))
 
     done();
 }
 
 function copyManifestTask(done) {
-    gulp.src('./manifest.json')
+    gulp.src([
+        './manifest.json',
+        './sw.js',
+    ])
         .pipe(gulp.dest('./dist'))
 
     done();
 }
 
 function copyImagesTask(done) {
-    gulp.src('./img/*.webp')
+    gulp.src([
+        './img/*.webp',
+        './img/*.png'
+    ])
         .pipe(imagemin())
         .pipe(gulp.dest('./dist/img'))
 
@@ -106,51 +140,71 @@ function copyImagesTask(done) {
 }
 
 function moveScriptsTask(done) {
-    const idb = gulp.src('./node_modules/idb/lib/idb.js')
-        .pipe(gulp.dest('./js'))
-
-    const echo = gulp.src('./node_modules/echo-js/dist/echo.min.js')
-        .pipe(gulp.dest('./js'))
-
-    const sw = gulp.src('./sw.js')
-        .pipe(gulp.dest('./js'))
-
-    return merge(idb, sw, echo);
+    gulp.src([
+        './node_modules/idb/lib/idb.js',
+        './node_modules/echo-js/dist/echo.min.js',
+        './sw.js'
+    ]).pipe(gulp.dest('./js'))
+    console.log('ppppp')
+    done();
 }
 
 function scriptsTask(done) {
-    gulp.src('js/**/*.js')
-        .pipe(concat('all.js'))
+    gulp.src([
+        'js/**/*.js',
+        './node_modules/idb/lib/idb.js',
+        './node_modules/echo-js/dist/echo.min.js',
+        './sw.js'
+    ]).pipe(concat('all.js'))
         .pipe(gulp.dest('./dist/js'))
 
     done();
 }
 
 function scriptsDistTask(done) {
-    gulp.src('js/**/*.js')
+    gulp.src([
+        './js/dbhelper.js',
+        './js/echo.min.js',
+        './js/idb.js',
+        './js/indexdb-helper.js',
+        './js/main.js',
+        './js/service-worker.js',
+        // './js/sw.js',
+    ])
         .pipe(concat('all.js'))
         .pipe(uglify())
-        .pipe(gzip())
+        // .pipe(gzip())
         .pipe(gulp.dest('./dist/js'))
 
     done();
 }
 
-function cleanSWScriptTask(done) {
-    gulp.src('./js/sw.js', { read: false })
-        .pipe(rm())
+function scriptsDetailDistTask(done) {
+    gulp.src([
+        './js/dbhelper.js',
+        './js/echo.min.js',
+        './js/idb.js',
+        './js/indexdb-helper.js',
+        './js/restaurant_info.js',
+        './js/service-worker.js',
+        // './js/sw.js',
+    ])
+        .pipe(concat('all-detail.js'))
+        .pipe(uglify())
+        // .pipe(gzip())
+        .pipe(gulp.dest('./dist/js'))
 
-    done()
+    done();
 }
 
-function cleanNodeModulesScriptsTask(done) {
-    const idb = gulp.src('./js/idb.js', { read: false })
-        .pipe(rm())
+function cleanScriptsTask(done) {
+    gulp.src([
+        './js/sw.js',
+        './js/idb.js',
+        './js/echo.min.js'
+    ], { read: false }).pipe(rm())
 
-    const echo = gulp.src('./js/echo.min.js', { read: false })
-        .pipe(rm())
-
-    return merge(idb, echo);
+    done()
 }
 
 function lintTask(done) {

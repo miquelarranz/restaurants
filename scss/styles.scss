@@ -69,10 +69,10 @@ img[data-src] {
 }
 
 #map {
-  opacity: 0;
+  display:none;
 }
 
-#map[class] {
-  opacity: 1;
-  transition: opacity 0.3s;
+#map-button {
+	margin: 20px;
+	width: 200px;
 }

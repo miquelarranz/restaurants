@@ -2,26 +2,81 @@
 
 const restaurantInfo = {
     restaurant: undefined,
-    map: undefined
+    map: undefined,
+    mapLoaded: false,
 };
+
+document.getElementById('map-button').addEventListener('click', toggleMap);
+
+function toggleMap() {
+    const map = document.getElementById('map');
+    map.style.display = (map.style.display === 'none') ? 'block' : 'none';
+
+    if (!restaurantInfo.mapLoaded) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.defer = true;
+        script.src= 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&libraries=places&callback=initMap';
+        document.body.appendChild(script);
+        map.classList.add('loaded');
+
+        restaurantInfo.mapLoaded = true;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.async = true;
+    link.href= '/dist/css/restaurant.css';
+    document.head.appendChild(link);
+
+    initializeView();
+});
+
+function initializeView() {
+    IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
+
+    echo.init({ // eslint-disable-line no-undef
+        offset: 100,
+        throttle: 250,
+        unload: false
+    });
+
+    IndexDBHelper.showCachedRestaurants().then((restaurants) => { // eslint-disable-line no-undef
+        const restaurant = restaurants.filter((restaurant) => {
+            return restaurant.id === getParameterByName('id');
+        })[0];
+
+        console.log('cached', restaurant)
+
+        if (restaurant) {
+            restaurantInfo.restaurant = restaurant;
+            fillRestaurantHTML();
+        }
+
+        fetchRestaurantFromURL((error, restaurant) => {
+            if (error) { // Got an error!
+                console.error(error);
+            } else {
+                fillBreadcrumb();
+                DBHelper.mapMarkerForRestaurant(restaurantInfo.restaurant, restaurantInfo.map); // eslint-disable-line no-undef
+            }
+        });
+    });
+}
 
 /**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-    fetchRestaurantFromURL((error, restaurant) => {
-        if (error) { // Got an error!
-            console.error(error);
-        } else {
-            restaurantInfo.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
-                zoom: 16,
-                center: restaurant.latlng,
-                scrollwheel: false
-            });
-            fillBreadcrumb();
-            DBHelper.mapMarkerForRestaurant(restaurantInfo.restaurant, restaurantInfo.map); // eslint-disable-line no-undef
-        }
+    restaurantInfo.map = new google.maps.Map(document.getElementById('map'), { // eslint-disable-line no-undef
+        zoom: 16,
+        scrollwheel: false,
+        center: restaurantInfo.restaurant.latlng
     });
+
+    DBHelper.mapMarkerForRestaurant(restaurantInfo.restaurant, restaurantInfo.map); // eslint-disable-line no-undef
 };
 
 /**
@@ -38,10 +93,11 @@ function fetchRestaurantFromURL(callback) {
         callback(error, null);
     } else {
         DBHelper.fetchRestaurantById(id, (error, restaurant) => { // eslint-disable-line no-undef
-            restaurantInfo.restaurant = restaurant;
             if (!restaurant) {
                 return;
             }
+            restaurantInfo.restaurant = restaurant;
+
             fillRestaurantHTML();
             callback(null, restaurant);
         });
@@ -65,8 +121,9 @@ function fillRestaurantHTML(restaurant) {
     const image = document.getElementById('restaurant-img');
     image.className = 'restaurant-img';
     image.defer = true;
-    image.alt = restaurant.image_description;
-    image.src = DBHelper.imageUrlForRestaurant(restaurant); // eslint-disable-line no-undef
+    image.alt = restaurant.name;
+    image.setAttribute('src', './img/grey.webp'); // eslint-disable-line no-undef
+    image.setAttribute('data-echo', DBHelper.imageUrlForRestaurant(restaurant)); // eslint-disable-line no-undef
 
     const cuisine = document.getElementById('restaurant-cuisine');
     cuisine.innerHTML = restaurant.cuisine_type;

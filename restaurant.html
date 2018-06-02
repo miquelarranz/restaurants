@@ -6,11 +6,13 @@
   <meta name="author" content="Miquel Arranz">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#3F51B5"/>
+  <link rel="manifest" href="/manifest.json">
 
   <!-- Normalize.css for better cross-browser consistency -->
-  <link defer rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <!-- <link defer rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" /> -->
   <!-- Main CSS file -->
-  <link defer rel="stylesheet" href="css/index.css" type="text/css">
+  <link async rel="stylesheet" href="dist/css/header.css" type="text/css">
+  <link async rel="stylesheet" href="dist/css/styles.css" type="text/css">
 
   <title>Restaurant Info</title>
 </head>
@@ -25,7 +27,7 @@
     <!-- Beginning breadcrumb -->
     <nav aria-label="Breadcrumb" class="breadcrumb">
       <ol id="breadcrumb" >
-        <li><a href="/">Home</a></li>
+        <li><a href="/dist/">Home</a></li>
       </ol>
     </nav>
     <!-- End breadcrumb -->
@@ -35,20 +37,21 @@
 
   <!-- Beginning main -->
   <main id="maincontent">
-    <!-- Beginning map -->
-    <section id="map-container">
-      <div id="map" role="application"></div>
-    </section>
-    <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h1 id="restaurant-name"></h1>
-      <img defer async id="restaurant-img">
+      <img defer id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
     </section>
     <!-- end restaurant -->
+    <!-- Beginning map -->
+    <section id="map-container">
+      <button id="map-button" type="button" id="">Show Map</button>
+      <div id="map" role="application"></div>
+    </section>
+    <!-- End map -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
@@ -64,9 +67,9 @@
   <!-- End footer -->
 
   <!-- Beginning scripts -->
-  <script defer type="application/javascript" charset="utf-8" src="localhost:8000/dist/js/all.js.gz"></script>
+  <script defer type="application/javascript" charset="utf-8" src="/dist/js/all-detail.js"></script>
   <!-- Google Maps -->
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&callback=initMap" type="text/javascript"></script>  <!-- End scripts -->
+  <!-- <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkrOcJWww1bYgBkZmI2UqdoKHwRGiLIlQ&callback=initMap" type="text/javascript"></script>  <!-- End scripts --> -->
 
 </body>
 
