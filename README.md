@@ -20,7 +20,7 @@ gulp dist
 
 If it fails, then run:
 ```
-gulpt move-scripts && gulp dist
+gulp move-scripts && gulp dist
 ```
 
 ## Usage
