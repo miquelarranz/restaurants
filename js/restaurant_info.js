@@ -48,8 +48,6 @@ function initializeView() {
             return restaurant.id === getParameterByName('id');
         })[0];
 
-        console.log('cached', restaurant)
-
         if (restaurant) {
             restaurantInfo.restaurant = restaurant;
             fillRestaurantHTML();
@@ -97,9 +95,18 @@ function fetchRestaurantFromURL(callback) {
                 return;
             }
             restaurantInfo.restaurant = restaurant;
-
             fillRestaurantHTML();
-            callback(null, restaurant);
+
+            DBHelper.fetchReviewsByRestaurant(id, (error, reviews) => { // eslint-disable-line no-undef
+                if (error || !reviews) {
+                    return;
+                }
+
+                restaurantInfo.restaurant.reviews = reviews;
+                fillReviewsHTML();
+
+                callback(null, restaurantInfo.restaurant);
+            });
         });
     }
 }
@@ -114,6 +121,11 @@ function fillRestaurantHTML(restaurant) {
 
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
+
+    if (!restaurant.is_favorite) {
+        const favorite = document.getElementById('favorite');
+        favorite.innerHTML = 'Favorite Restaurant';
+    }
 
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
@@ -132,8 +144,6 @@ function fillRestaurantHTML(restaurant) {
     if (restaurant.operating_hours) {
         fillRestaurantHoursHTML();
     }
-    // fill reviews
-    fillReviewsHTML();
 }
 
 /**
@@ -195,9 +205,9 @@ function createReviewHTML(review) {
     name.innerHTML = review.name;
     li.appendChild(name);
 
-    const date = document.createElement('p');
-    date.innerHTML = review.date;
-    li.appendChild(date);
+    // const date = document.createElement('p');
+    // date.innerHTML = review.date;
+    // li.appendChild(date);
 
     const rating = document.createElement('p');
     rating.innerHTML = `Rating: ${review.rating}`;
@@ -242,4 +252,39 @@ function getParameterByName(name, url) {
     if (!results[2])
         return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function addReview(e) { // eslint-disable-line no-unused-vars
+    e.preventDefault();
+    const nameInput = document.getElementById('name');
+    const ratingInput = document.getElementById('rating');
+    const commentsInput = document.getElementById('comments');
+
+    const id = getParameterByName('id');
+    if (!id) { // no id found in URL
+        return;
+    } else {
+        const name = nameInput.value;
+        const rating = ratingInput.value;
+        const comments = commentsInput.value;
+
+        console.log(name, rating, comments)
+
+        DBHelper.addReview(id, name, rating, comments, (error, review) => { // eslint-disable-line no-undef
+            if (error) {
+                return;
+            }
+
+            nameInput.value = null;
+            ratingInput.value = 1;
+            commentsInput.value = null;
+
+            appendNewReview(review);
+        });
+    }
+}
+
+function appendNewReview(review) {
+    const ul = document.getElementById('reviews-list');
+    ul.appendChild(createReviewHTML(review));
 }

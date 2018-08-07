@@ -9,8 +9,12 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Database URL.
      * Change this to restaurants.json file location on your server.
      */
-    static get API_URL() {
+    static get RESTAURANTS_URL() {
         return 'http://localhost:1337/restaurants';
+    }
+
+    static get REVIEWS_URL() {
+        return 'http://localhost:1337/reviews';
     }
 
 
@@ -18,11 +22,12 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
-        fetch(DBHelper.API_URL)
+        fetch(DBHelper.RESTAURANTS_URL)
             .then(function(response) {
                 return response.json();
             })
             .then(function(restaurants) {
+                console.log(1, restaurants);
                 callback(null, restaurants);
             })
             .catch(function(error) {
@@ -34,7 +39,7 @@ class DBHelper { // eslint-disable-line no-unused-vars
      * Fetch a restaurant by its ID.
      */
     static fetchRestaurantById(id, callback) {
-        fetch(`${DBHelper.API_URL}/${id}`)
+        fetch(`${DBHelper.RESTAURANTS_URL}/${id}`)
             .then(function(response) {
                 return response.json();
             })
@@ -133,6 +138,46 @@ class DBHelper { // eslint-disable-line no-unused-vars
                 callback(null, uniqueCuisines);
             }
         });
+    }
+
+    /**
+     * Fetch the reviews of a restaurant.
+     */
+    static fetchReviewsByRestaurant(id, callback) {
+        fetch(`${DBHelper.REVIEWS_URL}/?restaurant_id=${id}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(reviews) {
+                callback(null, reviews);
+            })
+            .catch(function(error) {
+                callback(error);
+            });
+    }
+
+    /**
+     * Add a new review.
+     */
+    static addReview(id, name, rating, comments, callback) {
+        fetch(`${DBHelper.REVIEWS_URL}/`, {
+            method: 'post',
+            body: JSON.stringify({
+                restaurant_id: id,
+                name: name,
+                rating: rating,
+                comments: comments,
+            })
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(review) {
+                callback(null, review);
+            })
+            .catch(function(error) {
+                callback(error);
+            });
     }
 
     /**
