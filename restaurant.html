@@ -18,7 +18,7 @@
   <!-- Beginning header -->
   <header id="header" class="fixed">
     <!-- Beginning nav -->
-    <nav>
+    <nav class="title">
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
@@ -37,6 +37,7 @@
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h1 id="restaurant-name"></h1>
+      <div id="favorite"></div>
       <img defer id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
@@ -52,6 +53,27 @@
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
+
+      <div id="add-review">
+          <h3>Add a new review!</h3>
+          <form id="add-review-form" onsubmit="addReview(event)">
+              Name:<br>
+              <input type="text" name="name" id="name" required><br>
+              Rating:<br>
+              <select name="rating" id="rating">
+                <option selected value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select><br>
+              Comments:<br>
+              <textarea required name="comments" id="comments" placeholder="Add a comment here!"></textarea><br>
+
+              <input type="submit" value="Submit">
+        </form>
+
+      </div>
     </section>
     <!-- End reviews -->
   </main>

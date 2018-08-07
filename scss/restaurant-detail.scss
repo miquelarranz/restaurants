@@ -5,6 +5,17 @@
   margin-top: 131px;
 }
 
+#favorite {
+    background-color: #FDD835;
+    border: #FF9800;
+    color: white;
+    padding: 6px;
+    width: 140px;
+    font-size: 12px;
+    border-radius: 10px;
+    margin: 10px auto;
+}
+
 .fixed {
   position: fixed;
   top: 0;
@@ -46,6 +57,7 @@
   margin: 25px;
   text-transform: uppercase;
   line-height: 1.1;
+  padding-top: 10px;
 }
 
 #restaurant-img {
