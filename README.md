@@ -1,6 +1,6 @@
 # Restaurant Reviews Progressive Web App
 
-This repository contains all the files related to a Restaurant Reviews Progressive Web App (PWA) made during the Mobile Web Specialist Nanodegree from Udacity. It contains two main views, one that includes a list of restaurants and another one that includes the restaurant detail. It is based on the Mobile-First approach (it's completely responsive) and it works offline thanks to the service workers and the browser cache.
+This repository contains all the files related to a Restaurant Reviews Progressive Web App (PWA) made during the Mobile Web Specialist Nanodegree from Udacity. It contains two main views, one that includes a list of restaurants and another one that includes the restaurant detail. It is based on the Mobile-First approach (it's completely responsive) and it works offline thanks to the service workers and the browser cache. It also allows to add reviews offline and it automatically sends the request to the server when it is online again.
 
 ## Installation
 
