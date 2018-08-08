@@ -180,6 +180,25 @@ class DBHelper { // eslint-disable-line no-unused-vars
     }
 
     /**
+     * Add a new review.
+     */
+    static toggleFavoritism(id, isFavorite, callback) {
+        fetch(`${DBHelper.RESTAURANTS_URL}/${id}?is_favorite=${isFavorite}`, {
+            method: 'put'
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(restaurant) {
+                console.log(restaurant);
+                callback(null, restaurant);
+            })
+            .catch(function(error) {
+                callback(error);
+            });
+    }
+
+    /**
      * Restaurant page URL.
      */
     static urlForRestaurant(restaurant) {

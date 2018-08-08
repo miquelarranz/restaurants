@@ -4,6 +4,7 @@ const restaurantInfo = {
     restaurant: undefined,
     map: undefined,
     mapLoaded: false,
+    id: undefined
 };
 
 document.getElementById('map-button').addEventListener('click', toggleMap);
@@ -43,9 +44,11 @@ function initializeView() {
         unload: false
     });
 
+    restaurantInfo.id = getParameterByName('id');
+
     IndexDBHelper.showCachedRestaurants().then((restaurants) => { // eslint-disable-line no-undef
         const restaurant = restaurants.filter((restaurant) => {
-            return restaurant.id === getParameterByName('id');
+            return restaurant.id === restaurantInfo.id;
         })[0];
 
         if (restaurant) {
@@ -85,7 +88,7 @@ function fetchRestaurantFromURL(callback) {
         callback(null, restaurantInfo.restaurant);
         return;
     }
-    const id = getParameterByName('id');
+    const id = restaurantInfo.id;
     if (!id) { // no id found in URL
         let error = 'No restaurant id in URL';
         callback(error, null);
@@ -122,12 +125,7 @@ function fillRestaurantHTML(restaurant) {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
-    const favorite = document.getElementById('favorite');
-    if (restaurant.is_favorite) {
-        favorite.innerHTML = 'Favorite Restaurant';
-    } else {
-        favorite.style.display = 'none';
-    }
+    setFavoritism(restaurant.is_favorite);
 
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
@@ -146,6 +144,23 @@ function fillRestaurantHTML(restaurant) {
     if (restaurant.operating_hours) {
         fillRestaurantHoursHTML();
     }
+}
+
+function setFavoritism(isFavorite) {
+    const favorite = document.getElementById('favorite');
+    const favoriteToggle = document.getElementById('favorite-toggle');
+
+    if (isFavorite === 'true') {
+        console.log('1')
+        favorite.innerHTML = 'Favorite Restaurant';
+        favorite.style.display = 'block';
+        favoriteToggle.innerHTML = 'Remove it from your favorite restaurants';
+    } else {
+        console.log('2')
+        favorite.style.display = 'none';
+        favoriteToggle.innerHTML = 'Add to your favorite restaurants';
+    }
+
 }
 
 /**
@@ -262,7 +277,7 @@ function addReview(e) { // eslint-disable-line no-unused-vars
     const ratingInput = document.getElementById('rating');
     const commentsInput = document.getElementById('comments');
 
-    const id = getParameterByName('id');
+    const id = restaurantInfo.id;
     if (!id) { // no id found in URL
         return;
     } else {
@@ -287,4 +302,14 @@ function addReview(e) { // eslint-disable-line no-unused-vars
 function appendNewReview(review) {
     const ul = document.getElementById('reviews-list');
     ul.appendChild(createReviewHTML(review));
+}
+
+function toggleRestaurantFavoritism() {
+    const isFavorite = (restaurantInfo.restaurant.is_favorite == 'true') ? 'false' : 'true';
+
+    DBHelper.toggleFavoritism(restaurantInfo.id, isFavorite, (error, restaurant) => { // eslint-disable-line no-undef
+        restaurantInfo.restaurant.is_favorite = isFavorite;
+
+        setFavoritism(isFavorite);
+    });
 }

@@ -16,6 +16,10 @@
     margin: 10px auto;
 }
 
+#favorite-toggle {
+    cursor: pointer;
+}
+
 #add-review {
     background-color: white;
     padding: 10px;
@@ -85,6 +89,7 @@
 	width: 100%;
     max-width: 300px;
     height: auto;
+    margin-top: 15px;
 }
 
 #restaurant-address {
