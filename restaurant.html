@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta name="description" content="Restaurant Reviews Web Application">
@@ -59,11 +59,11 @@
           <h3>Add a new review!</h3>
           <form id="add-review-form" onsubmit="addReview(event)">
               <div class="input-field">
-                  <label>Name:</label>
+                  <label for="name">Name:</label>
                   <input type="text" name="name" id="name" required>
               </div>
               <div class="input-field">
-                  <label>Rating:</label>
+                  <label for="rating">Rating:</label>
                   <select name="rating" id="rating">
                     <option selected value="1">1</option>
                     <option value="2">2</option>
@@ -73,7 +73,7 @@
                   </select>
               </div>
               <div class="input-field">
-                  <label>Comments:</label>
+                  <label for="comments">Comments:</label>
                   <textarea required name="comments" id="comments" placeholder="Add a comment here!"></textarea><br>
               </div>
               <button type="submit" id="add-review-button">Add a new review</button>
