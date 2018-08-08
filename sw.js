@@ -79,7 +79,8 @@ self.addEventListener('install', event => {
                 './js/all-detail.js',
                 './index.html',
                 './restaurant.html',
-                './manifest.json'
+                './manifest.json',
+                './sw.js'
             ]);
         })
     );

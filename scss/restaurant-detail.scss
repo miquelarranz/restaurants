@@ -20,6 +20,17 @@
     cursor: pointer;
 }
 
+#offline-indicator {
+    background-color: forestgreen;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    display: none;
+    color: white;
+    z-index: 1001;
+}
+
 #add-review {
     background-color: white;
     padding: 10px;

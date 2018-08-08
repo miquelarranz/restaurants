@@ -151,12 +151,10 @@ function setFavoritism(isFavorite) {
     const favoriteToggle = document.getElementById('favorite-toggle');
 
     if (isFavorite === 'true') {
-        console.log('1')
         favorite.innerHTML = 'Favorite Restaurant';
         favorite.style.display = 'block';
         favoriteToggle.innerHTML = 'Remove it from your favorite restaurants';
     } else {
-        console.log('2')
         favorite.style.display = 'none';
         favoriteToggle.innerHTML = 'Add to your favorite restaurants';
     }
@@ -271,32 +269,76 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function addReview(e) { // eslint-disable-line no-unused-vars
-    e.preventDefault();
+function addReview(e, review) { // eslint-disable-line no-unused-vars
+    if (e) e.preventDefault();
+
+    let name = undefined;
+    let rating = undefined;
+    let comments = undefined;
+    let id = undefined;
     const nameInput = document.getElementById('name');
     const ratingInput = document.getElementById('rating');
     const commentsInput = document.getElementById('comments');
 
-    const id = restaurantInfo.id;
+    if (!review) {
+        name = nameInput.value;
+        rating = ratingInput.value;
+        comments = commentsInput.value;
+
+        id = restaurantInfo.id;
+    } else {
+        name = review.name;
+        rating = review.rating;
+        comments = review.comments;
+
+        id = review.restaurant_id;
+    }
+
     if (!id) { // no id found in URL
         return;
     } else {
-        const name = nameInput.value;
-        const rating = ratingInput.value;
-        const comments = commentsInput.value;
-
         DBHelper.addReview(id, name, rating, comments, (error, review) => { // eslint-disable-line no-undef
             if (error) {
-                return;
+                if (navigator.onLine === false) {
+                    review = {
+                        restaurant_id: id,
+                        name,
+                        rating,
+                        comments
+                    }
+
+                    IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
+
+                    IndexDBHelper.storeReviews([review]); // eslint-disable-line no-undef
+
+                    addOfflineIndicator();
+
+                } else {
+                    return;
+                }
             }
 
-            nameInput.value = null;
-            ratingInput.value = 1;
-            commentsInput.value = null;
+            if (e) {
+                nameInput.value = null;
+                ratingInput.value = 1;
+                commentsInput.value = null;
+            }
 
             appendNewReview(review);
         });
     }
+}
+
+function addOfflineIndicator() {
+    const offlineIndicator = document.getElementById('offline-indicator');
+
+    offlineIndicator.style.display = 'block';
+}
+
+function removeOfflineIndicator() {
+    const offlineIndicator = document.getElementById('offline-indicator');
+
+    offlineIndicator.style.display = 'none';
 }
 
 function appendNewReview(review) {
@@ -313,3 +355,22 @@ function toggleRestaurantFavoritism() {
         setFavoritism(isFavorite);
     });
 }
+
+window.addEventListener('online', function(e) {
+    removeOfflineIndicator();
+
+    IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
+
+    IndexDBHelper.getReviews().then((reviews) => { // eslint-disable-line no-undef
+
+        reviews.forEach((review) => {
+            addReview(null, review); // eslint-disable-line no-undef
+        })
+
+        IndexDBHelper.clearReviews(); // eslint-disable-line no-undef
+    });
+}, false);
+
+window.addEventListener('offline', function(e) {
+    addOfflineIndicator();
+}, false);

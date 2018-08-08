@@ -5,6 +5,7 @@ const DATABASE = 'restaurant-reviews';
 const RESTAURANTS_OBJECT_STORE = 'restaurants';
 const NEIGHBORHOODS_OBJECT_STORE = 'neighborhoods';
 const CUISINES_OBJECT_STORE = 'cuisines';
+const REVIEWS_OBJECT_STORE = 'reviews';
 
 /**
  * IndexDB database helper functions.
@@ -17,7 +18,7 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
     static openDatabase() {
         if (!navigator.serviceWorker) return;
 
-        _dbPromise = idb.open(DATABASE, 2, (upgradeDB) => { // eslint-disable-line no-undef
+        _dbPromise = idb.open(DATABASE, 3, (upgradeDB) => { // eslint-disable-line no-undef
             /* eslint-disable */
             switch (upgradeDB.oldVersion) {
                 case 0:
@@ -30,6 +31,10 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
                         autoIncrement: true
                     });
                     upgradeDB.createObjectStore(CUISINES_OBJECT_STORE, {
+                        autoIncrement: true
+                    });
+                case 2:
+                    upgradeDB.createObjectStore(REVIEWS_OBJECT_STORE, {
                         autoIncrement: true
                     });
             }
@@ -73,6 +78,18 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
         });
     }
 
+    static storeReviews(reviews) {
+        _dbPromise.then((db) => {
+            if (!db) return;
+
+            const tx = db.transaction(REVIEWS_OBJECT_STORE, 'readwrite');
+            const store = tx.objectStore(REVIEWS_OBJECT_STORE);
+            reviews.forEach(function(review) {
+                store.put(review);
+            });
+        });
+    }
+
     static showCachedRestaurants() {
         return _dbPromise.then(function(db) {
             if (!db) return;
@@ -101,6 +118,26 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
             return db.transaction(NEIGHBORHOODS_OBJECT_STORE)
                 .objectStore(NEIGHBORHOODS_OBJECT_STORE)
                 .getAll();
+        });
+    }
+
+    static getReviews() {
+        return _dbPromise.then(function(db) {
+            if (!db) return;
+
+            return db.transaction(REVIEWS_OBJECT_STORE)
+                .objectStore(REVIEWS_OBJECT_STORE)
+                .getAll();
+        });
+    }
+
+    static clearReviews() {
+        return _dbPromise.then(function(db) {
+            if (!db) return;
+
+            return db.transaction(REVIEWS_OBJECT_STORE, 'readwrite')
+                .objectStore(REVIEWS_OBJECT_STORE)
+                .clear();
         });
     }
 }
