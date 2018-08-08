@@ -16,6 +16,27 @@
     margin: 10px auto;
 }
 
+#add-review {
+    background-color: white;
+    padding: 10px;
+}
+
+#add-review-button {
+    padding: 10px;
+    background-color: #3f51b5;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #3f51b5;
+}
+
+.input-field {
+    & > input, textarea, select {
+        width: 100%;
+        margin: 10px 0;
+        padding: 5px 0;
+    }
+}
+
 .fixed {
   position: fixed;
   top: 0;
@@ -146,7 +167,6 @@
 
   #restaurant-container {
     order: 1;
-    width: calc(50% - 20px);
   }
 
   #reviews-container {

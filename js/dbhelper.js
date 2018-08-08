@@ -27,7 +27,6 @@ class DBHelper { // eslint-disable-line no-unused-vars
                 return response.json();
             })
             .then(function(restaurants) {
-                console.log(1, restaurants);
                 callback(null, restaurants);
             })
             .catch(function(error) {

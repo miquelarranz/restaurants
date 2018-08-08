@@ -57,20 +57,25 @@
       <div id="add-review">
           <h3>Add a new review!</h3>
           <form id="add-review-form" onsubmit="addReview(event)">
-              Name:<br>
-              <input type="text" name="name" id="name" required><br>
-              Rating:<br>
-              <select name="rating" id="rating">
-                <option selected value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select><br>
-              Comments:<br>
-              <textarea required name="comments" id="comments" placeholder="Add a comment here!"></textarea><br>
-
-              <input type="submit" value="Submit">
+              <div class="input-field">
+                  <label>Name:</label>
+                  <input type="text" name="name" id="name" required>
+              </div>
+              <div class="input-field">
+                  <label>Rating:</label>
+                  <select name="rating" id="rating">
+                    <option selected value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+              </div>
+              <div class="input-field">
+                  <label>Comments:</label>
+                  <textarea required name="comments" id="comments" placeholder="Add a comment here!"></textarea><br>
+              </div>
+              <button type="submit" id="add-review-button">Add a new review</button>
         </form>
 
       </div>

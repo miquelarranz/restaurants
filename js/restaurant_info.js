@@ -122,9 +122,11 @@ function fillRestaurantHTML(restaurant) {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
-    if (!restaurant.is_favorite) {
-        const favorite = document.getElementById('favorite');
+    const favorite = document.getElementById('favorite');
+    if (restaurant.is_favorite) {
         favorite.innerHTML = 'Favorite Restaurant';
+    } else {
+        favorite.style.display = 'none';
     }
 
     const address = document.getElementById('restaurant-address');
@@ -267,8 +269,6 @@ function addReview(e) { // eslint-disable-line no-unused-vars
         const name = nameInput.value;
         const rating = ratingInput.value;
         const comments = commentsInput.value;
-
-        console.log(name, rating, comments)
 
         DBHelper.addReview(id, name, rating, comments, (error, review) => { // eslint-disable-line no-undef
             if (error) {
