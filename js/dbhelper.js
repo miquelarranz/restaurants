@@ -190,7 +190,6 @@ class DBHelper { // eslint-disable-line no-unused-vars
                 return response.json();
             })
             .then(function(restaurant) {
-                console.log(restaurant);
                 callback(null, restaurant);
             })
             .catch(function(error) {

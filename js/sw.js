@@ -18,11 +18,8 @@ addEventListener('fetch', event => {
         return;
     }
 
-    console.log(requestUrl, event.request)
-
     event.respondWith(
         caches.match(event.request, {ignoreSearch: true}).then(function(response) {
-            console.log('yas', response)
             return response || fetch(event.request);
         })
     );

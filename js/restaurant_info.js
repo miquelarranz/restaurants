@@ -64,6 +64,7 @@ function initializeView() {
                 console.error(error);
             } else {
                 restaurantInfo.restaurant = restaurant;
+                setFavoritism(restaurant.is_favorite);
                 fillBreadcrumb();
             }
         });
@@ -87,7 +88,7 @@ window.initMap = () => {
  * Get current restaurant from page URL.
  */
 function fetchRestaurantFromURL(callback) {
-    if (restaurantInfo.restaurant) { // restaurant already fetched!
+    if (restaurantInfo.restaurant && restaurantInfo.restaurant.reviews) { // restaurant already fetched!
         callback(null, restaurantInfo.restaurant);
         return;
     }
@@ -358,6 +359,7 @@ function toggleRestaurantFavoritism() {
     DBHelper.toggleFavoritism(restaurantInfo.id, isFavorite, (error, restaurant) => { // eslint-disable-line no-undef
         restaurantInfo.restaurant.is_favorite = isFavorite;
 
+        IndexDBHelper.storeRestaurants([restaurantInfo.restaurant]); // eslint-disable-line no-undef
         setFavoritism(isFavorite);
     });
 }

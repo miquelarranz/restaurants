@@ -145,7 +145,7 @@ function moveScriptsTask(done) {
         './node_modules/echo-js/dist/echo.min.js',
         './sw.js'
     ]).pipe(gulp.dest('./js'))
-    console.log('ppppp')
+
     done();
 }
 
