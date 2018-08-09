@@ -6,6 +6,7 @@ const RESTAURANTS_OBJECT_STORE = 'restaurants';
 const NEIGHBORHOODS_OBJECT_STORE = 'neighborhoods';
 const CUISINES_OBJECT_STORE = 'cuisines';
 const REVIEWS_OBJECT_STORE = 'reviews';
+const PENDING_REVIEWS_OBJECT_STORE = 'pending-reviews';
 
 /**
  * IndexDB database helper functions.
@@ -18,7 +19,7 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
     static openDatabase() {
         if (!navigator.serviceWorker) return;
 
-        _dbPromise = idb.open(DATABASE, 3, (upgradeDB) => { // eslint-disable-line no-undef
+        _dbPromise = idb.open(DATABASE, 4, (upgradeDB) => { // eslint-disable-line no-undef
             /* eslint-disable */
             switch (upgradeDB.oldVersion) {
                 case 0:
@@ -35,6 +36,10 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
                     });
                 case 2:
                     upgradeDB.createObjectStore(REVIEWS_OBJECT_STORE, {
+                        autoIncrement: true
+                    });
+                case 3:
+                    upgradeDB.createObjectStore(PENDING_REVIEWS_OBJECT_STORE, {
                         autoIncrement: true
                     });
             }
@@ -90,6 +95,18 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
         });
     }
 
+    static storePendingReviews(reviews) {
+        _dbPromise.then((db) => {
+            if (!db) return;
+
+            const tx = db.transaction(PENDING_REVIEWS_OBJECT_STORE, 'readwrite');
+            const store = tx.objectStore(PENDING_REVIEWS_OBJECT_STORE);
+            reviews.forEach(function(review) {
+                store.put(review);
+            });
+        });
+    }
+
     static showCachedRestaurants() {
         return _dbPromise.then(function(db) {
             if (!db) return;
@@ -121,7 +138,7 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
         });
     }
 
-    static getReviews() {
+    static showCachedReviews() {
         return _dbPromise.then(function(db) {
             if (!db) return;
 
@@ -131,12 +148,22 @@ class IndexDBHelper { // eslint-disable-line no-unused-vars
         });
     }
 
-    static clearReviews() {
+    static getPendingReviews() {
         return _dbPromise.then(function(db) {
             if (!db) return;
 
-            return db.transaction(REVIEWS_OBJECT_STORE, 'readwrite')
-                .objectStore(REVIEWS_OBJECT_STORE)
+            return db.transaction(PENDING_REVIEWS_OBJECT_STORE)
+                .objectStore(PENDING_REVIEWS_OBJECT_STORE)
+                .getAll();
+        });
+    }
+
+    static clearPendingReviews() {
+        return _dbPromise.then(function(db) {
+            if (!db) return;
+
+            return db.transaction(PENDING_REVIEWS_OBJECT_STORE, 'readwrite')
+                .objectStore(PENDING_REVIEWS_OBJECT_STORE)
                 .clear();
         });
     }

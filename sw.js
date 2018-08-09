@@ -9,13 +9,17 @@ var allCaches = [
 addEventListener('fetch', event => {
     var requestUrl = new URL(event.request.url);
 
+    if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+        return
+    }
+
     if (requestUrl.pathname.startsWith('/dist/img/') && requestUrl.pathname.endsWith('.webp')) {
         event.respondWith(serveImage(event.request));
         return;
     }
 
     event.respondWith(
-        caches.match(event.request).then(function(response) {
+        caches.match(event.request, {ignoreSearch: true}).then(function(response) {
             return response || fetch(event.request);
         })
     );
@@ -55,22 +59,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(staticCacheName).then(cache => {
             return cache.addAll([
-                // 'index.html',
-                // 'restaurant.html',
-                // 'sw.js',
-                // 'js/dbhelper.js',
-                // 'js/main.js',
-                // 'js/restaurant_info.js',
-                // 'js/service-worker.js',
-                // 'js/indexdb-helper.js',
-                // 'css/header.css',
-                // 'css/map.css',
-                // 'css/navigation.css',
-                // 'css/restaurant-detail.css',
-                // 'css/restaurant-filters.css',
-                // 'css/restaurant-list.css',
-                // 'css/styles.css',
-
+                './',
                 './css/index.css',
                 './css/restaurant.css',
                 './css/header.css',

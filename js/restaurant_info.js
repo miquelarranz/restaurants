@@ -48,20 +48,23 @@ function initializeView() {
 
     IndexDBHelper.showCachedRestaurants().then((restaurants) => { // eslint-disable-line no-undef
         const restaurant = restaurants.filter((restaurant) => {
-            return restaurant.id === restaurantInfo.id;
+            return restaurant.id.toString() === restaurantInfo.id;
         })[0];
 
         if (restaurant) {
             restaurantInfo.restaurant = restaurant;
             fillRestaurantHTML();
+            if (restaurantInfo.restaurant.reviews) {
+                fillReviewsHTML();
+            }
         }
 
         fetchRestaurantFromURL((error, restaurant) => {
             if (error) { // Got an error!
                 console.error(error);
             } else {
+                restaurantInfo.restaurant = restaurant;
                 fillBreadcrumb();
-                DBHelper.mapMarkerForRestaurant(restaurantInfo.restaurant, restaurantInfo.map); // eslint-disable-line no-undef
             }
         });
     });
@@ -106,6 +109,9 @@ function fetchRestaurantFromURL(callback) {
                 }
 
                 restaurantInfo.restaurant.reviews = reviews;
+
+                IndexDBHelper.storeRestaurants([restaurantInfo.restaurant]); // eslint-disable-line no-undef
+
                 fillReviewsHTML();
 
                 callback(null, restaurantInfo.restaurant);
@@ -309,10 +315,7 @@ function addReview(e, review) { // eslint-disable-line no-unused-vars
 
                     IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
 
-                    IndexDBHelper.storeReviews([review]); // eslint-disable-line no-undef
-
-                    addOfflineIndicator();
-
+                    IndexDBHelper.storePendingReviews([review]); // eslint-disable-line no-undef
                 } else {
                     return;
                 }
@@ -322,9 +325,12 @@ function addReview(e, review) { // eslint-disable-line no-unused-vars
                 nameInput.value = null;
                 ratingInput.value = 1;
                 commentsInput.value = null;
-            }
 
-            appendNewReview(review);
+                restaurantInfo.restaurant.reviews.push(review);
+                appendNewReview(review);
+
+                IndexDBHelper.storeRestaurants([restaurantInfo.restaurant]); // eslint-disable-line no-undef
+            }
         });
     }
 }
@@ -361,13 +367,13 @@ window.addEventListener('online', function(e) {
 
     IndexDBHelper.openDatabase(); // eslint-disable-line no-undef
 
-    IndexDBHelper.getReviews().then((reviews) => { // eslint-disable-line no-undef
+    IndexDBHelper.getPendingReviews().then((reviews) => { // eslint-disable-line no-undef
 
         reviews.forEach((review) => {
             addReview(null, review); // eslint-disable-line no-undef
         })
 
-        IndexDBHelper.clearReviews(); // eslint-disable-line no-undef
+        IndexDBHelper.clearPendingReviews(); // eslint-disable-line no-undef
     });
 }, false);
 
